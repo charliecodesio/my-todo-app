@@ -42,9 +42,7 @@ Make sure you have the following tools and software installed:
 
 ### Move into the project directory:
 
-    ```text
     cd my-todo-app
-    ```
 
 ### Installing Dependencies
 This project uses React, Axios, and Vite as its main dependencies. You can install them by running the following command:
@@ -70,7 +68,7 @@ This will launch the project in your default web browser. Any changes you make t
 Building for Production
 When you're ready to deploy your project, you can create a production build using the following command:
 
-    ```text
+    ```bash
     npm run build
     ```
 This will generate optimized production-ready files in the dist directory.
