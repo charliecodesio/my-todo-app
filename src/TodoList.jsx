@@ -11,122 +11,122 @@ const LoadingComponent = () => {
   );
 };
 
-const Table = ({ tasks, newTask, setNewTask, addTask, reloadPage, handleInputKeyPress }) => {
-  const columns = React.useMemo(
-    () => [
-      { Header: '#', accessor: 'id' },
-      { Header: 'User', accessor: 'userId' },
-      { Header: 'Description', accessor: 'title', className: 'description-column'},
-      { Header: 'Completed', accessor: 'completed', Cell: ({ value }) => (value ? '✔️' : '❌') },
-    ],
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    nextPage,
-    previousPage,
-    state: { pageIndex },
-    gotoPage
-  } = useTable(
-    {
-      columns,
-      data: tasks,
-      initialState: { pageIndex: 0 },
-    },
-    useSortBy,
-    usePagination
-  );
-
-  return (
-    <div className="container">
-      <h1>Todo List</h1>
-      <table className="table" {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render('Header')}
-                  {column.isSorted ? (column.isSortedDesc ? ' ↓' : ' ↑') : ''}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
-                })}
+const Table = ({
+    tasks,
+    newTask,
+    setNewTask,
+    addTask,
+    reloadPage,
+    handleInputKeyPress
+  }) => {
+    const columns = React.useMemo(
+      () => [
+        { Header: '#', accessor: 'id' },
+        { Header: 'User', accessor: 'userId' },
+        { Header: 'Description', accessor: 'title', className: 'description-column' },
+        {
+          Header: 'Completed',
+          accessor: 'completed',
+          Cell: ({ value }) => (value ? '✔️' : '❌')
+        },
+      ],
+      []
+    );
+  
+    const {
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      page,
+      prepareRow,
+      canPreviousPage,
+      canNextPage,
+      pageOptions,
+      nextPage,
+      previousPage,
+      state: { pageIndex },
+      gotoPage
+    } = useTable(
+      {
+        columns,
+        data: tasks,
+        initialState: { pageIndex: 0 },
+      },
+      useSortBy,
+      usePagination
+    );
+  
+    return (
+      <div className="container">
+        <h1>Todo List</h1>
+        <table className="table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                    {column.render('Header')}
+                    {column.isSorted ? (column.isSortedDesc ? ' ↓' : ' ↑') : ''}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    <div className="pagination">
-        <span className="page-info">
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        <div className="pagination">
+          <span className="page-info">
             Page {' '}
             <strong>
-            {pageIndex + 1} of {pageOptions.length}
+              {pageIndex + 1} of {pageOptions.length}
             </strong>{' '}
-        </span>
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'← Before'}
-        </button>
-        <span>
-        {Array.from(
-        {
-            length: Math.min(3, pageOptions.length),
-        },
-        (_, index) => {
-            let pageToShow;
-            if (pageIndex + index <= pageOptions.length - 1) {
-            pageToShow = pageIndex + index;
-            } else {
-            pageToShow = pageIndex;
-            }
-            return (
-            <button
+          </span>
+  
+          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'← Prev'}
+          </button>
+          <span>
+            {pageOptions.map((page, index) => (
+              <button
                 key={index}
-                onClick={() => gotoPage(pageToShow)}
-                className={pageIndex === pageToShow ? 'active' : ''}
-            >
-                {pageOptions[pageToShow] + 1}
-            </button>
-            );
-        }
-        )}
-
-        </span>
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
+                onClick={() => gotoPage(page)}
+                className={pageIndex === page ? 'active' : ''}
+              >
+                {page + 1}
+              </button>
+            ))}
+          </span>
+          <button onClick={() => nextPage()} disabled={!canNextPage}>
             {'Next →'}
-        </button>
-    </div>
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="New Task"
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          onKeyDown={handleInputKeyPress}
-        />
-        <button onClick={addTask}>Add new task</button>
-        <button onClick={reloadPage}>Reload</button>        
+          </button>
+        </div>
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="New Task"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            onKeyDown={handleInputKeyPress}
+          />
+          <button onClick={addTask}>Add new task</button>
+          <button onClick={reloadPage}>Reload</button>
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+ 
+  
 
 const TodoList = () => {
   const [tasks, setTasks] = useState([]);
